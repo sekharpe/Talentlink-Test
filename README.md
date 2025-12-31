@@ -3,7 +3,7 @@
 NAME: SAKTHIPRIYA S  
 GROUP: 1   
 PROJECT NAME:TALENT LINK    
-TASK: WEEK 1 AND WEEK 2   CODE  HAVE BEEN PUSHED IN GITHUB ON 16-12-25  
+ 
 
 WEEK 1: 
 1. Define scope and user roles: Client, Freelancer.
