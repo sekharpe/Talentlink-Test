@@ -19,4 +19,9 @@ urlpatterns = [
 
     # Projects API
     path('api/projects/', include('projects.urls')),
+
+    #proposals
+    path("api/proposals/", include("proposals.urls")),
+    path("api/skills/", include("skills.urls")),
+
 ]
