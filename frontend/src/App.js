@@ -37,6 +37,10 @@ import ProjectDetails from "./pages/ProjectDetails";
 import ClientProjectProposals from "./pages/ClientProjectProposals";
 import FreelancerProposals from "./pages/FreelancerProposals";
 import CreateProject from "./pages/CreateProject";
+import Contracts from "./pages/Contracts";
+import ContractChat from "./pages/ContractChat";
+
+
 
 
 function App() {
@@ -66,6 +70,11 @@ function App() {
           element={<FreelancerProposals />}
         />
         <Route path="/client/projects/create" element={<CreateProject />} />
+        <Route path="/contracts" element={<Contracts />} />
+
+        <Route path="/contracts/:contractId/chat" element={<ContractChat />} />
+
+
 
       </Routes>
     </Router>

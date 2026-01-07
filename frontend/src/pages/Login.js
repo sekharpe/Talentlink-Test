@@ -118,6 +118,7 @@ function Login() {
       localStorage.setItem("access", res.data.access);
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.user.role);
+      localStorage.setItem("accessToken", res.data.access);
       // 🔁 REDIRECT BASED ON ROLE
 navigate("/projects"); // both client & freelancer go here
 

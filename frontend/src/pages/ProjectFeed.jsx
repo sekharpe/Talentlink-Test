@@ -110,6 +110,14 @@ function ProjectFeed() {
       <div className="card">
         <h2>Available Projects</h2>
 
+        {/* ✅ BOTH ROLES: MY CONTRACTS BUTTON */}
+        <button
+          style={{ marginBottom: "20px", marginRight: "10px" }}
+          onClick={() => navigate("/contracts")}
+        >
+          My Contracts
+        </button>
+
         {/* ✅ CLIENT ONLY: CREATE PROJECT BUTTON */}
         {role === "client" && (
           <button
