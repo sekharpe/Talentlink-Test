@@ -2,8 +2,6 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 print("🔥 USING talentlink/urls.py 🔥")
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -29,6 +27,16 @@ urlpatterns = [
 
     #messages
     path("api/messages/", include("messages_app.urls")),
+
+    #notifications
+    path("api/", include("notifications.urls")),
+
+    #reviews 
+    # path("api/", include("reviews.urls")),
+
+    path("api/reviews/", include("reviews.urls")),
+
+
 
 
 ]

@@ -1,0 +1,44 @@
+.notifications-container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 10px;
+}
+
+.notifications-title {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.notification-card {
+  border-radius: 6px;
+  padding: 14px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+  transition: background 0.2s ease;
+}
+
+.notification-card.unread {
+  background-color: #e8f0fe;
+  font-weight: 600;
+}
+
+.notification-card.read {
+  background-color: #f9f9f9;
+  color: #555;
+}
+
+.notification-message {
+  margin-bottom: 6px;
+}
+
+.notification-time {
+  font-size: 12px;
+  color: #777;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #777;
+  margin-top: 40px;
+}

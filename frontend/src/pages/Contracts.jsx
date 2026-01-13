@@ -61,6 +61,7 @@
 // export default Contracts;
 
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Contracts() {
@@ -69,6 +70,8 @@ function Contracts() {
 
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("accessToken");
+
+  const navigate = useNavigate();
 
   // 🔄 Fetch contracts
   useEffect(() => {
@@ -174,7 +177,7 @@ function Contracts() {
             {contract.status.toUpperCase()}
           </span>
 
-          {/* ✅ OPEN CHAT BUTTON (ADDED ONLY) */}
+          {/* ✅ OPEN CHAT BUTTON */}
           <div>
             <button
               style={{
@@ -189,6 +192,27 @@ function Contracts() {
               Open Chat
             </button>
           </div>
+
+          {/* 🟢 LEAVE REVIEW BUTTON (ADDED) */}
+          {contract.status === "completed" && (
+            <div style={{ marginTop: "12px" }}>
+              <button
+                onClick={() =>
+                  navigate(`/contracts/${contract.id}/review`)
+                }
+                style={{
+                  padding: "8px 16px",
+                  backgroundColor: "#2563eb",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "4px",
+                  cursor: "pointer",
+                }}
+              >
+                Leave a Review
+              </button>
+            </div>
+          )}
 
           {/* ✅ Client-only Complete Button */}
           {role === "client" && contract.status === "active" && (
@@ -215,3 +239,4 @@ function Contracts() {
 }
 
 export default Contracts;
+

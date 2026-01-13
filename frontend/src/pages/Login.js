@@ -116,11 +116,14 @@ function Login() {
 
       // ✅ Store JWT tokens
       localStorage.setItem("access", res.data.access);
+      navigate("/projects"); 
       localStorage.setItem("refresh", res.data.refresh);
       localStorage.setItem("role", res.data.user.role);
       localStorage.setItem("accessToken", res.data.access);
+      localStorage.setItem("user_id", res.data.user.id);
+
       // 🔁 REDIRECT BASED ON ROLE
-navigate("/projects"); // both client & freelancer go here
+navigate("/dashboard"); // both client & freelancer go here
 
       setMessage("Login Successful!");
 

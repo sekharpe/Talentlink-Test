@@ -181,6 +181,7 @@ INSTALLED_APPS = [
     'contracts',
     'messages_app',
     'reviews',
+    'notifications',
 ]
 
 # =====================

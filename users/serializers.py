@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import User, Profile
-
-
 # =======================
 # REGISTER SERIALIZER
 # =======================
@@ -25,8 +23,6 @@ class RegisterSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
-
 # =======================
 # PROFILE SERIALIZER
 # =======================

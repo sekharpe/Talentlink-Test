@@ -6,8 +6,11 @@ from django.shortcuts import get_object_or_404
 from .models import Proposal
 from .serializers import ProposalSerializer
 
-# ✅ NEW IMPORT
+# ✅ IMPORT CONTRACT MODEL
 from contracts.models import Contract
+
+# ✅ IMPORT NOTIFICATION UTILITY
+from notifications.utils import create_notification
 
 
 # ===============================
@@ -31,7 +34,14 @@ class ProposalCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated, IsFreelancer]
 
     def perform_create(self, serializer):
-        serializer.save(freelancer=self.request.user)
+        proposal = serializer.save(freelancer=self.request.user)
+
+        # 🔔 NOTIFY CLIENT
+        create_notification(
+            user=proposal.project.client,
+            message=f"{self.request.user.name} submitted a proposal for '{proposal.project.title}'",
+            type="info"
+        )
 
 
 # ===================================
@@ -83,7 +93,7 @@ class ProposalStatusUpdateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # ❗ Prevent accepting if contract already exists for project
+        # ❗ Prevent accepting if contract already exists
         if status_value == "accepted":
             if Contract.objects.filter(project=proposal.project).exists():
                 return Response(
@@ -104,6 +114,13 @@ class ProposalStatusUpdateView(APIView):
                 freelancer=proposal.freelancer,
                 amount=proposal.bid_amount
             )
+
+        # 🔔 NOTIFY FREELANCER (THIS IS WHAT YOU ASKED)
+        create_notification(
+            user=proposal.freelancer,
+            message=f"{request.user.name} {status_value} your proposal for '{proposal.project.title}'",
+            type="success" if status_value == "accepted" else "warning"
+        )
 
         return Response(
             {"message": f"Proposal {status_value} successfully"},

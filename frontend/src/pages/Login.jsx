@@ -18,6 +18,9 @@ function Login() {
       // SAVE TOKENS ✅
       localStorage.setItem("access", response.data.access);
       localStorage.setItem("refresh", response.data.refresh);
+      localStorage.setItem("user_id", response.data.user.id);
+      localStorage.setItem("name", response.data.user.name);
+
 
       navigate("/");
     } catch (error) {

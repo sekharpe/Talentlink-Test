@@ -184,3 +184,61 @@ class LogoutView(APIView):
                 {"message": "Invalid token"},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+# ================== USER DETAIL ==================
+# class UserDetailView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, user_id):
+#         user = User.objects.get(id=user_id)
+
+#         return Response({
+#             "id": user.id,
+#             "name": user.name,
+#             "email": user.email,
+#             "role": user.role,
+#         })
+
+# ================== USER DETAIL ==================
+from contracts.models import Contract
+
+class UserDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, user_id):
+        user = User.objects.get(id=user_id)
+
+        # ✅ Calculate completed projects based on role
+        if user.role == "freelancer":
+            projects_completed = Contract.objects.filter(
+                freelancer=user,
+                status="completed"
+            ).count()
+        else:  # client
+            projects_completed = Contract.objects.filter(
+                client=user,
+                status="completed"
+            ).count()
+
+        return Response({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+            "projects_completed": projects_completed,
+        })
+    
+# ================== PROFILE (LOGGED-IN USER) ==================
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+
+        return Response({
+            "id": user.id,
+            "name": user.name,
+            "email": user.email,
+            "role": user.role,
+        })
+
