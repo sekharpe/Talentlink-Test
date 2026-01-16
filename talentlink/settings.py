@@ -140,6 +140,9 @@
 
 from pathlib import Path
 from datetime import timedelta
+import os
+import dj_database_url
+from decouple import config, Csv
 
 # =====================
 # BASE DIR
@@ -149,10 +152,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =====================
 # SECURITY
 # =====================
-SECRET_KEY = 'django-insecure-change-this-in-production'
-DEBUG = True
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ["*"]  # Development only
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 # =====================
 # INSTALLED APPS
@@ -190,6 +193,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # MUST be first
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # For serving static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -209,7 +213,7 @@ ROOT_URLCONF = 'talentlink.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'frontend' / 'build'],  # Serve React build
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -230,15 +234,12 @@ WSGI_APPLICATION = 'talentlink.wsgi.application'
 # =====================
 # DATABASE (PostgreSQL)
 # =====================
+# Use DATABASE_URL from environment (Render provides this)
+# Falls back to local PostgreSQL for development
+DATABASE_URL = config('DATABASE_URL', default='postgresql://postgres:sakthidb@localhost:5432/talentlink')
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'talentlink',
-        'USER': 'postgres',
-        'PASSWORD': 'sakthidb',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
 }
 
 # =====================
@@ -297,10 +298,12 @@ SIMPLE_JWT = {
 # =====================
 # CORS
 # =====================
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+# Get CORS origins from environment variable
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,http://127.0.0.1:3000',
+    cast=Csv()
+)
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_HEADERS = True
@@ -314,6 +317,7 @@ CORS_ALLOW_METHODS = [
     "PUT",
 ]
 
+
 # =====================
 # INTERNATIONALIZATION
 # =====================
@@ -326,6 +330,22 @@ USE_TZ = True
 # STATIC FILES
 # =====================
 STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Serve React build static files
+STATICFILES_DIRS = [
+    BASE_DIR / 'frontend' / 'build' / 'static',
+]
+
+# WhiteNoise configuration for serving static files
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# =====================
+# MEDIA FILES (if you're using file uploads)
+# =====================
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # =====================
 # DEFAULT PRIMARY KEY
