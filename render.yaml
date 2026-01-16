@@ -1,11 +1,12 @@
-services:
+databases:
   # PostgreSQL Database
-  - type: pserv
-    name: talentlink-db
-    region: oregon
+  - name: talentlink-db
+    databaseName: talentlink
+    user: talentlink
     plan: free
-    ipAllowList: []
+    region: oregon
 
+services:
   # Django + React Web Service
   - type: web
     name: talentlink-web
