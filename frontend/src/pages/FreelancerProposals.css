@@ -1,0 +1,90 @@
+.my-proposals-page {
+  padding: 30px;
+  background: #f5f7fb;
+  min-height: 100vh;
+}
+
+/* Header */
+.my-proposals-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.my-proposals-header h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.back-btn {
+  background: #e0e0e0;
+}
+
+.logout-btn {
+  background: #333;
+  color: white;
+}
+
+/* ✅ FIXED GRID CARD */
+.my-proposal-card {
+  background: white;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+  display: grid;
+  grid-template-columns: 1fr 200px 140px; /* 👈 KEY FIX */
+  align-items: center;
+  gap: 10px;
+}
+
+/* Columns */
+.proposal-col {
+  font-size: 15px;
+}
+
+.proposal-col span {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Center Bid */
+.bid-col {
+  text-align: center;
+}
+
+/* Status */
+.status {
+  justify-self: end;
+  padding: 4px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  text-transform: capitalize;
+}
+
+/* Status Colors */
+.status.accepted {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status.rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
