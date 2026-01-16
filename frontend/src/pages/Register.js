@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import "./AuthForm.css";
 
+// Use relative URL for production (Render) and absolute URL for local dev
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '' 
+  : 'http://127.0.0.1:8000';
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,7 +20,7 @@ function Register() {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/users/register/",
+        `${API_BASE_URL}/api/users/register/`,
         { name, email, password, role }
       );
 

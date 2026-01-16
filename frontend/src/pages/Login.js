@@ -94,6 +94,11 @@ import { Link, useNavigate } from "react-router-dom"; // ✅ NEW
 import axios from "axios";
 import "./AuthForm.css";
 
+// Use relative URL for production (Render) and absolute URL for local dev
+const API_BASE_URL = process.env.NODE_ENV === 'production' 
+  ? '' 
+  : 'http://127.0.0.1:8000';
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -108,7 +113,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "http://127.0.0.1:8000/api/users/login/",
+        `${API_BASE_URL}/api/users/login/`,
         { email, password }
       );
 
