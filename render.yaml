@@ -4,8 +4,6 @@ services:
     name: talentlink-db
     region: oregon
     plan: free
-    databaseName: talentlink
-    databaseUser: talentlink
     ipAllowList: []
 
   # Django + React Web Service
