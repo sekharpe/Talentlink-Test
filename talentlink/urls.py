@@ -4,11 +4,18 @@ from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.http import JsonResponse
 
 print("🔥 USING talentlink/urls.py 🔥")
 
+def health_check(request):
+    return JsonResponse({"status": "healthy"})
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Health check endpoint
+    path('health/', health_check, name='health_check'),
 
     # Users API
     path('api/users/', include('users.urls')),
