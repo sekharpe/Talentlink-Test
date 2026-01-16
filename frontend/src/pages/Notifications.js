@@ -1,54 +1,92 @@
 // import { useEffect, useState } from "react";
-// import api from "../api/axios";// your axios instance
+// import api from "../api/axios";
+// import "./Notifications.css";
 
 // function Notifications() {
 //   const [notifications, setNotifications] = useState([]);
 //   const [loading, setLoading] = useState(true);
 
 //   useEffect(() => {
-//     api.get("/notifications/")
-//       .then(res => {
-//         setNotifications(res.data);
-//         setLoading(false);
-//       })
-//       .catch(err => {
-//         console.error("Error fetching notifications", err);
-//         setLoading(false);
-//       });
+//     fetchNotifications();
 //   }, []);
 
+//   const fetchNotifications = async () => {
+//     try {
+//       const res = await api.get("/notifications/");
+//       setNotifications(res.data || []);
+//     } catch (error) {
+//       console.error("Failed to fetch notifications");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const markAsRead = async (id) => {
+//     try {
+//       await api.post(`/notifications/${id}/mark-read/`);
+
+//       // Update UI instantly
+//       setNotifications(prev =>
+//         prev.map(n =>
+//           n.id === id ? { ...n, is_read: true } : n
+//         )
+//       );
+
+//       // Update navbar unread count
+//       window.dispatchEvent(new Event("notifications-updated"));
+//     } catch (error) {
+//       console.error("Failed to mark notification as read");
+//     }
+//   };
+
+//   const unread = notifications.filter(n => !n.is_read);
+//   const read = notifications.filter(n => n.is_read);
+
 //   if (loading) {
-//     return <p>Loading notifications...</p>;
+//     return <p className="notif-loading">Loading notifications...</p>;
 //   }
 
 //   return (
-//     <div>
+//     <div className="notifications-container">
 //       <h2>Notifications</h2>
 
-//       {notifications.length === 0 && (
-//         <p>No notifications</p>
-//       )}
+//       {/* ================= UNREAD ================= */}
+//       <div className="notif-section">
+//         <h3>Unread</h3>
 
-//       {notifications.map(n => (
-//         <div
-//           key={n.id}
-//           style={{
-//             border: "1px solid #ccc",
-//             padding: "10px",
-//             marginBottom: "8px",
-//             backgroundColor: n.is_read ? "#f5f5f5" : "#e8f0fe"
-//           }}
-//         >
-//           <p>{n.message}</p>
-//           <small>{new Date(n.created_at).toLocaleString()}</small>
-//         </div>
-//       ))}
+//         {unread.length === 0 ? (
+//           <p className="empty-text">No unread notifications 🎉</p>
+//         ) : (
+//           unread.map(n => (
+//             <div key={n.id} className="notif-card unread">
+//               <p>{n.message}</p>
+//               <button onClick={() => markAsRead(n.id)}>
+//                 Mark as read
+//               </button>
+//             </div>
+//           ))
+//         )}
+//       </div>
+
+//       {/* ================= READ ================= */}
+//       <div className="notif-section">
+//         <h3>Read</h3>
+
+//         {read.length === 0 ? (
+//           <p className="empty-text">No read notifications</p>
+//         ) : (
+//           read.map(n => (
+//             <div key={n.id} className="notif-card read">
+//               <p>{n.message}</p>
+//             </div>
+//           ))
+//         )}
+//       </div>
 //     </div>
 //   );
 // }
 
 // export default Notifications;
-
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 import "./Notifications.css";
@@ -58,57 +96,83 @@ function Notifications() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.get("/notifications/")
-      .then(res => {
-        setNotifications(res.data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    fetchNotifications();
   }, []);
 
-  const markAsRead = (id) => {
-    api.patch(`/notifications/${id}/read/`)
-      .then(() => {
-        setNotifications(prev =>
-          prev.map(n =>
-            n.id === id ? { ...n, is_read: true } : n
-          )
-        );
-        window.dispatchEvent(new Event("notifications-updated"));
-      });
+  // ================= FETCH =================
+  const fetchNotifications = async () => {
+    try {
+      const res = await api.get("/notifications/");
+      setNotifications(res.data || []);
+    } catch (error) {
+      console.error("Failed to fetch notifications", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ================= MARK AS READ =================
+  const markAsRead = async (id) => {
+    try {
+      // 🔥 MUST MATCH BACKEND URL
+      await api.post(`/notifications/${id}/mark-read/`);
+
+      // 🔥 Re-fetch from backend (source of truth)
+      await fetchNotifications();
+
+      // 🔥 Update navbar unread count
+      window.dispatchEvent(new Event("notifications-updated"));
+    } catch (error) {
+      console.error("Failed to mark notification as read", error);
+    }
+  };
+
+  // ================= FILTER =================
+  const unread = notifications.filter(n => !n.is_read);
+  const read = notifications.filter(n => n.is_read);
+
   if (loading) {
-    return <p style={{ textAlign: "center" }}>Loading notifications...</p>;
+    return <p className="notif-loading">Loading notifications...</p>;
   }
 
   return (
     <div className="notifications-container">
-      <div className="notifications-title">Notifications</div>
+      <h2>Notifications</h2>
 
-      {notifications.length === 0 && (
-        <div className="no-notifications">
-          No notifications yet
-        </div>
-      )}
+      {/* ========== UNREAD ========== */}
+      <div className="notif-section">
+        <h3>Unread</h3>
 
-      {notifications.map(n => (
-        <div
-          key={n.id}
-          className={`notification-card ${n.is_read ? "read" : "unread"}`}
-          onClick={() => !n.is_read && markAsRead(n.id)}
-        >
-          <div className="notification-message">
-            {n.message}
-          </div>
-          <div className="notification-time">
-            {new Date(n.created_at).toLocaleString()}
-          </div>
-        </div>
-      ))}
+        {unread.length === 0 ? (
+          <p className="empty-text">No unread notifications 🎉</p>
+        ) : (
+          unread.map(n => (
+            <div key={n.id} className="notif-card unread">
+              <p>{n.message}</p>
+              <button onClick={() => markAsRead(n.id)}>
+                Mark as read
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* ========== READ ========== */}
+      <div className="notif-section">
+        <h3>Read</h3>
+
+        {read.length === 0 ? (
+          <p className="empty-text">No read notifications</p>
+        ) : (
+          read.map(n => (
+            <div key={n.id} className="notif-card read">
+              <p>{n.message}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
 
 export default Notifications;
-

@@ -2,22 +2,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
+  padding: 14px 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navbar-left {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: #2563eb;
 }
 
 .navbar-center a {
-  margin: 0 12px;
+  margin: 0 16px;
   text-decoration: none;
   color: #374151;
   font-weight: 500;
+  position: relative;
 }
 
 .navbar-center a:hover {
@@ -28,10 +32,10 @@
   background-color: #ef4444;
   color: white;
   border: none;
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .navbar-right button:hover {
@@ -45,6 +49,6 @@
 
 .notification-indicator {
   margin-left: 6px;
-  color: #dc2626; /* red */
-  font-weight: 600;
+  color: #dc2626;
+  font-weight: 700;
 }

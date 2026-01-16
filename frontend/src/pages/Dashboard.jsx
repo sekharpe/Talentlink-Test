@@ -207,8 +207,7 @@ function Dashboard() {
           res.data.email ||
           "User"
         );
-      } catch (error) {
-        console.error("Profile fetch failed");
+      } catch {
         setName("User");
       }
     };
@@ -216,30 +215,16 @@ function Dashboard() {
     const fetchDashboardData = async () => {
       try {
         if (role === "client") {
-          const projectsRes = await api.get("/projects/");
+          const projectsRes = await api.get("/projects/my/");
           const contractsRes = await api.get("/contracts/my/");
 
-          const projectsRaw =
-            projectsRes.data?.results ||
-            projectsRes.data?.data ||
-            projectsRes.data ||
-            [];
-
-          const myProjects = projectsRaw.filter(
-            p =>
-              String(p.client) === String(userId) ||
-              String(p.user) === String(userId) ||
-              String(p.owner) === String(userId)
-          );
-
+          const projects =
+            projectsRes.data?.results || projectsRes.data || [];
           const contracts =
-            contractsRes.data?.results ||
-            contractsRes.data?.data ||
-            contractsRes.data ||
-            [];
+            contractsRes.data?.results || contractsRes.data || [];
 
           setStats({
-            totalProjects: myProjects.length,
+            totalProjects: projects.length,
             activeContracts: contracts.filter(
               c =>
                 c.status === "active" ||
@@ -256,20 +241,10 @@ function Dashboard() {
           const proposalsRes = await api.get("/proposals/my/");
           const contractsRes = await api.get("/contracts/my/");
 
-          console.log("RAW proposals response:", proposalsRes.data);
-          console.log("RAW contracts response:", contractsRes.data);
-
           const proposals =
-            proposalsRes.data?.results ||
-            proposalsRes.data?.data ||
-            proposalsRes.data ||
-            [];
-
+            proposalsRes.data?.results || proposalsRes.data || [];
           const contracts =
-            contractsRes.data?.results ||
-            contractsRes.data?.data ||
-            contractsRes.data ||
-            [];
+            contractsRes.data?.results || contractsRes.data || [];
 
           setStats({
             proposalsSent: proposals.length,
@@ -285,10 +260,7 @@ function Dashboard() {
           });
         }
       } catch (error) {
-        console.error(
-          "Dashboard fetch error:",
-          error.response?.data || error.message
-        );
+        console.error("Dashboard fetch error", error);
       } finally {
         setLoading(false);
       }
@@ -302,22 +274,23 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <h2>Dashboard</h2>
-
-      {/* ================= USER CARD ================= */}
-      <div className="user-card">
-        <div className="avatar-circle">
-          {name?.charAt(0).toUpperCase()}
-        </div>
-
-        <h1 className="user-name-big">{name}</h1>
-
-        <span className={`role-badge ${role}`}>
-          {role}
+      {/* ================= WELCOME BANNER ================= */}
+      <div className="welcome-banner">
+        <h1>
+          Welcome back, <span>{name}</span>!
+        </h1>
+        <p>
+          {role === "freelancer"
+            ? "Apply to projects, build your reputation, and grow your career."
+            : "Post projects, manage freelancers, and track progress easily."}
+        </p>
+        <span className={`welcome-role ${role}`}>
+          {role?.toUpperCase()}
         </span>
       </div>
 
-      {/* ================= CLIENT DASHBOARD ================= */}
+      
+      {/* ================= DASHBOARD STATS ================= */}
       {role === "client" && (
         <>
           <h3>Client Dashboard</h3>
@@ -338,7 +311,6 @@ function Dashboard() {
         </>
       )}
 
-      {/* ================= FREELANCER DASHBOARD ================= */}
       {role === "freelancer" && (
         <>
           <h3>Freelancer Dashboard</h3>
@@ -363,3 +335,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

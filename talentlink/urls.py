@@ -29,7 +29,9 @@ urlpatterns = [
     path("api/messages/", include("messages_app.urls")),
 
     #notifications
-    path("api/", include("notifications.urls")),
+    # path("api/", include("notifications.urls")),
+    path("api/notifications/", include("notifications.urls")),
+
 
     #reviews 
     # path("api/", include("reviews.urls")),
